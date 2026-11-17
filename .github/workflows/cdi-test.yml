@@ -56,7 +56,11 @@ jobs:
 
           python -m py_compile corrections/cdi_governance_v2.py
 
+          python -m py_compile corrections/cdi_governance_v3.py
+
           python -m py_compile tests/test_cdi_governance_v2.py
+
+          python -m py_compile tests/test_cdi_governance_v3.py
 
       - name: Tester la gouvernance et les protections
 
@@ -67,6 +71,7 @@ jobs:
       - name: Tester le moteur et la memoire
 
         run: |
+
           rm -rf data/cdi_memory
 
           python - <<'PY'
