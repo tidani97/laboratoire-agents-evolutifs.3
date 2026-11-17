@@ -67,6 +67,7 @@ jobs:
       - name: Tester le moteur et la memoire
 
         run: |
+          rm -rf data/cdi_memory
 
           python - <<'PY'
 
