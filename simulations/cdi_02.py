@@ -253,12 +253,21 @@ def run_mission(seed, condition, mission):
 
     agents = create_agents()
 
-    shared_values = {
+    shared = (
 
-        action: 0.50 for action in ACTIONS
+    shared_values
 
-    }
+    if condition in (
 
+        "communication_temporaire",
+
+        "memoire_partagee"
+
+    )
+
+    else None
+
+)
     total_score = 0.0
 
     successful_rounds = 0
