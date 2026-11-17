@@ -175,18 +175,23 @@ def create_agents():
 def choose_action(agent, rng, shared_values=None):
 
     values = agent["values"].copy()
+    
+    shared = (
 
-    if shared_values:
+    shared_values
 
-        for action in ACTIONS:
+    if condition in (
 
-            values[action] = (
+        "communication_temporaire",
 
-                values[action] * 0.75
+        "memoire_partagee"
 
-                + shared_values[action] * 0.25
+    )
 
-            )
+    else None
+
+)
+    
 
     if rng.random() < EXPLORATION_RATE:
 
