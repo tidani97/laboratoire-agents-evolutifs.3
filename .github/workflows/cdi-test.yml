@@ -1,0 +1,97 @@
+
+
+name: CDI-TRADER 02 - Test automatique
+
+on:
+
+  push:
+
+    branches: [main]
+
+    paths:
+
+      - "agents/**"
+
+      - "simulations/**"
+
+      - ".github/workflows/cdi-test.yml"
+
+  workflow_dispatch:
+
+jobs:
+
+  smoke-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Recuperer le depot
+
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+
+        uses: actions/setup-python@v5
+
+        with:
+
+          python-version: "3.12"
+
+      - name: Verifier la syntaxe Python
+
+        run: |
+
+          python -m py_compile agents/cdi_memory_v2.py
+
+          python -m py_compile agents/cdi_memory_bridge_v2.py
+
+          python -m py_compile simulations/cdi_trader_02.py
+
+      - name: Tester le moteur et la memoire
+
+        run: |
+
+          python - <<'PY'
+
+          from simulations import cdi_trader_02 as trader
+
+          from agents.cdi_memory_bridge_v2 import flush_memory, reset_memory_buffer
+
+          from agents.cdi_memory_v2 import AGENTS, load_memory, memory_path, collective_path
+
+          trader.ROUNDS = 20
+
+          reset_memory_buffer()
+
+          system, history = trader.run_simulation(0, 1)
+
+          saved = flush_memory()
+
+          assert len(history) == 20
+
+          assert saved == 80
+
+          for agent in AGENTS:
+
+              records = load_memory(memory_path(agent))
+
+              assert len(records) == 20
+
+          collective = load_memory(collective_path())
+
+          assert len(collective) == 80
+
+          assert system["capital"] > 0
+
+          print("TEST REUSSI")
+
+          print("Cycles executes :", len(history))
+
+          print("Experiences sauvegardees :", saved)
+
+          print("Capital final :", round(system["capital"], 4))
+
+          print("Memoire des quatre agents : OK")
+
+          PY
