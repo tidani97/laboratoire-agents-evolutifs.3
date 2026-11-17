@@ -52,6 +52,8 @@ jobs:
 
           python -m py_compile simulations/cdi_trader_02.py
 
+          python -m py_compile simulations/cdi_trader_03.py
+
           python -m py_compile corrections/cdi_governance_v2.py
 
           python -m py_compile tests/test_cdi_governance_v2.py
