@@ -1,0 +1,119 @@
+name: Agent Report Test
+
+on:
+
+  workflow_dispatch:
+
+jobs:
+
+  agent-report-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Recuperer le depot
+
+        uses: actions/checkout@v4
+
+      - name: Configurer Python
+
+        uses: actions/setup-python@v5
+
+        with:
+
+          python-version: "3.11"
+
+      - name: Tester le rapport multi-agents
+
+        run: |
+
+          python - <<'PY'
+
+          from integrations.agent_report import format_agent_report
+
+          report = format_agent_report(
+
+              market="BTCUSD",
+
+              timeframe="M15",
+
+              analyst_summary="Tendance haussiere observee",
+
+              analyst_bias="HAUSSIER",
+
+              critic_summary="Resistance proche, confirmation necessaire",
+
+              risk_status="PROTECTED",
+
+              risk_summary="Stop loss obligatoire et exposition limitee",
+
+              decision_status="WAITING",
+
+              decision_reason="Attente d'une confirmation",
+
+              confidence=70,
+
+          )
+
+          required_sections = [
+
+              "1) ANALYSTE",
+
+              "2) AGENT CRITIQUE",
+
+              "3) GESTION DU RISQUE",
+
+              "4) AGENT DÉCIDEUR UNIQUE",
+
+              "MODE : SIMULATION / NOTIFICATIONS UNIQUEMENT",
+
+              "Aucun ordre n'est transmis à un courtier.",
+
+          ]
+
+          for section in required_sections:
+
+              assert section in report, f"Section manquante : {section}"
+
+          try:
+
+              format_agent_report(
+
+                  market="BTCUSD",
+
+                  timeframe="M15",
+
+                  analyst_summary="Analyse test",
+
+                  analyst_bias="NEUTRE",
+
+                  critic_summary="Risque de faux signal",
+
+                  risk_status="PROTECTED",
+
+                  risk_summary="Protection active",
+
+                  decision_status="WAITING",
+
+                  decision_reason="Attente",
+
+                  confidence=101,
+
+              )
+
+          except ValueError:
+
+              pass
+
+          else:
+
+              raise AssertionError("Une confiance invalide a ete acceptee")
+
+          print("SUCCES : rapport multi-agents valide.")
+
+          print("SUCCES : confiance invalide rejetee.")
+
+          print("SECURITE : aucun ordre transmis.")
+
+          PY
