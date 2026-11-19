@@ -113,6 +113,65 @@ jobs:
           print("SUCCES : rapport multi-agents valide.")
 
           print("SUCCES : confiance invalide rejetee.")
+          invalid_cases = [
+
+    {"risk_status": "UNKNOWN"},
+
+    {"decision_status": "EXECUTE"},
+
+    {"confidence": True},
+
+    {"confidence": False},
+
+    {"confidence": -1},
+
+    {"confidence": 101},
+
+    {"confidence": 70.5},
+
+]
+
+for invalid_case in invalid_cases:
+
+    arguments = {
+
+        "market": "BTCUSD",
+
+        "timeframe": "M15",
+
+        "analyst_summary": "Analyse test",
+
+        "analyst_bias": "NEUTRE",
+
+        "critic_summary": "Risque de faux signal",
+
+        "risk_status": "PROTECTED",
+
+        "risk_summary": "Protection active",
+
+        "decision_status": "WAITING",
+
+        "decision_reason": "Attente",
+
+        "confidence": 70,
+
+    }
+
+    arguments.update(invalid_case)
+
+    try:
+
+        format_agent_report(**arguments)
+
+    except ValueError:
+
+        pass
+
+    else:
+
+        raise AssertionError(f"Cas invalide accepte : {invalid_case}")
+
+print("SUCCES : les 7 cas invalides sont rejetes.")
 
           print("SECURITE : aucun ordre transmis.")
 
