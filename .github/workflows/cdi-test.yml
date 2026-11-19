@@ -101,9 +101,17 @@ python -m py_compile tests/test_cdi_trader_v3.py
 
           for agent in AGENTS:
 
-              records = load_memory(memory_path(agent))
+    records = load_memory(memory_path(agent))
 
-              assert len(records) == 20
+    print(f"Memoire {agent} : {len(records)} experiences")
+
+    assert len(records) == 20, (
+
+        f"ERREUR : {agent} possède {len(records)} "
+
+        "experiences au lieu de 20"
+
+    )
 
           collective = load_memory(collective_path())
 
