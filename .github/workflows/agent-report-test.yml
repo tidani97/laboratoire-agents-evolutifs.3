@@ -1,0 +1,129 @@
+
+
+name: Agent Report Test
+
+on:
+
+  workflow_dispatch:
+
+jobs:
+
+  agent-report-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Recuperer le depot
+
+        uses: actions/checkout@v4
+
+      - name: Configurer Python
+
+        uses: actions/setup-python@v5
+
+        with:
+
+          python-version: "3.11"
+
+      - name: Tester le rapport multi-agents
+
+        run: |
+
+          python - <<'PY'
+
+          from integrations.agent_report import format_agent_report
+
+          arguments = {
+
+              "market": "BTCUSD",
+
+              "timeframe": "M15",
+
+              "analyst_summary": "Analyse test",
+
+              "analyst_bias": "NEUTRE",
+
+              "critic_summary": "Risque de faux signal",
+
+              "risk_status": "PROTECTED",
+
+              "risk_summary": "Protection active",
+
+              "decision_status": "WAITING",
+
+              "decision_reason": "Attente",
+
+              "confidence": 70,
+
+          }
+
+          report = format_agent_report(**arguments)
+
+          required_sections = [
+
+              "1) ANALYSTE",
+
+              "2) AGENT CRITIQUE",
+
+              "3) GESTION DU RISQUE",
+
+              "4) AGENT DÉCIDEUR UNIQUE",
+
+              "MODE : SIMULATION / NOTIFICATIONS UNIQUEMENT",
+
+              "Aucun ordre n'est transmis à un courtier.",
+
+          ]
+
+          for section in required_sections:
+
+              assert section in report, f"Section manquante : {section}"
+
+          invalid_cases = [
+
+              {"risk_status": "UNKNOWN"},
+
+              {"decision_status": "EXECUTE"},
+
+              {"confidence": True},
+
+              {"confidence": False},
+
+              {"confidence": -1},
+
+              {"confidence": 101},
+
+              {"confidence": 70.5},
+
+          ]
+
+          for invalid_case in invalid_cases:
+
+              test_arguments = arguments.copy()
+
+              test_arguments.update(invalid_case)
+
+              try:
+
+                  format_agent_report(**test_arguments)
+
+              except ValueError:
+
+                  pass
+
+              else:
+
+                  raise AssertionError(
+
+                      f"Cas invalide accepte : {invalid_case}"
+
+                  )
+
+          print("SUCCES : rapport multi-agents valide.")
+
+          print("SUCCES : 7 cas invalides rejetes.")
+
+          print("SECURITE : aucun ordre transmis.")
+
+          PY
