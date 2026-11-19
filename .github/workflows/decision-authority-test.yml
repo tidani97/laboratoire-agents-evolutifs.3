@@ -1,0 +1,29 @@
+name: Decision Authority Test
+
+on:
+
+  workflow_dispatch:
+
+jobs:
+
+  decision-authority-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Recuperer le depot
+
+        uses: actions/checkout@v4
+
+      - name: Configurer Python
+
+        uses: actions/setup-python@v5
+
+        with:
+
+          python-version: "3.12"
+
+      - name: Tester l'autorite decisionnelle
+
+        run: python -m unittest discover -s tests -v
