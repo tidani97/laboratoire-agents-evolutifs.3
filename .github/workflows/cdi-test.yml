@@ -45,11 +45,11 @@ jobs:
       - name: Verifier la syntaxe Python
 
         run: |
-python -m py_compile corrections/cdi_trade_management_v1.py
+          python -m py_compile corrections/cdi_trade_management_v1.py
 
-python -m py_compile tests/test_cdi_trade_management_v1.py
+          python -m py_compile tests/test_cdi_trade_management_v1.py
 
-python -m py_compile tests/test_cdi_trader_v3.py
+          python -m py_compile tests/test_cdi_trader_v3.py
 
           python -m py_compile agents/cdi_memory_v2.py
 
