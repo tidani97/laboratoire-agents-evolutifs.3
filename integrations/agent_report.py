@@ -46,7 +46,7 @@ def format_agent_report(
 
         raise ValueError("Invalid risk status")
 
-    if decision_status not in DECISION_STATUSES:
+    if not isinstance(decision_status, str) or decision_status not in DECISION_STATUSES:
 
         raise ValueError("Invalid decision status")
 
