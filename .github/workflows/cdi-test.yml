@@ -101,17 +101,17 @@ jobs:
 
           for agent in AGENTS:
 
-    records = load_memory(memory_path(agent))
+              records = load_memory(memory_path(agent))
 
-    print(f"Memoire {agent} : {len(records)} experiences")
+              print(f"Memoire {agent} : {len(records)} experiences")
 
-    assert len(records) == 20, (
+              assert len(records) == 20, (
 
-        f"ERREUR : {agent} possède {len(records)} "
+                  f"ERREUR : {agent} possède {len(records)} "
 
-        "experiences au lieu de 20"
+                  "experiences au lieu de 20"
 
-    )
+              )
 
           collective = load_memory(collective_path())
 
