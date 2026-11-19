@@ -38,7 +38,7 @@ def format_agent_report(
 
 ) -> str:
 
-    if not isinstance(confidence, int) or not 0 <= confidence <= 100:
+    if type(confidence) is not int or not 0 <= confidence <= 100:
 
         raise ValueError("confidence must be between 0 and 100")
 
